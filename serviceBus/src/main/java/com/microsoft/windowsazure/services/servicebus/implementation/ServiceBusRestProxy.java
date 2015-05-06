@@ -236,7 +236,7 @@ public class ServiceBusRestProxy implements ServiceBusContract {
         return new ReceiveMessageResult(message);
     }
 
-    private Date getResponseDate(ClientResponse response){
+    private Date getResponseDate(ClientResponse response) {
         String responseDateString = response.getHeaders().getFirst("Date");
         Date responseDate = null;
         if (responseDateString != null) {

@@ -70,7 +70,15 @@
     </dependency>
 
     <!-- Test dependencies -->
-    <dependency> 
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>azure-core</artifactId>
+      <version>${project.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>azure-management-storage</artifactId>
       <version>${project.version}</version>
