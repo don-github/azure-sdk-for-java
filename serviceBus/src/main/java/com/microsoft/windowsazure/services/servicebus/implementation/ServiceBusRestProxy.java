@@ -25,9 +25,11 @@ import com.microsoft.windowsazure.core.pipeline.jersey.ServiceFilter;
 import com.microsoft.windowsazure.exception.ServiceException;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.MediaType;
@@ -234,6 +236,22 @@ public class ServiceBusRestProxy implements ServiceBusContract {
         return new ReceiveMessageResult(message);
     }
 
+    private Date getResponseDate(ClientResponse response){
+        String responseDateString = response.getHeaders().getFirst("Date");
+        Date responseDate = null;
+        if (responseDateString != null) {
+            try {
+                // format is Thu, 21 Jun 2012 08:00:42 GMT
+                return new SimpleDateFormat(
+                        "EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US)
+                        .parse(responseDateString);
+            } catch (ParseException e) {
+                // logger here
+            }
+        }
+        return responseDate;
+    }
+    
     private BrokeredMessage receiveMessage(ReceiveMessageOptions options,
             WebResource resource) {
         if (options.getTimeout() != null) {
@@ -274,7 +292,8 @@ public class ServiceBusRestProxy implements ServiceBusContract {
             message.setContentType(contentType.toString());
         }
 
-        Date date = clientResult.getResponseDate();
+        //Date date = clientResult.getResponseDate();
+        Date date = getResponseDate(clientResult);
         if (date != null) {
             message.setDate(date);
         }
